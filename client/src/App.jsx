@@ -6,6 +6,7 @@ import About from './pages/About'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import Header from './components/Header'
+import Sign_Up from './pages/Sign_Up'
 function App() {
   return (
     <BrowserRouter>
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/sign-in' element={<Sign_In />} />
+        <Route path='/sign-up' element={<Sign_Up />} />
         <Route path='/sign-out' element={<Sign_Out />} />
         <Route path='/about' element={<About />} />
         <Route path="/profile" element={<Profile />} />

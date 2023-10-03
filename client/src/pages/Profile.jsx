@@ -9,13 +9,15 @@ import { Link } from 'react-router-dom'
 
 
 function Profile() {
-  const {currentUser,loading,error}=useSelector((state)=>state.user)
-  const fileRef=useRef(null)
-  const [file,setFile]=useState(undefined)
+  const {currentUser,loading,error}=useSelector((state)=>state.user);
+  const fileRef=useRef(null);
+  const [file,setFile]=useState(undefined);
   const [filePercent,setFilePercent]=useState(0);
   const [fileUploadError,setFileUploadError]=useState(false);
-  const [formData,setFormData]=useState({})
-  const [updateSuccess,setUpdateSuccess]=useState(false)
+  const [formData,setFormData]=useState({});
+  const [updateSuccess,setUpdateSuccess]=useState(false);
+  const [showListingsError,setShowListingsError]=useState(false);
+  const [showListingToUser,setShowListingToUser]=useState([]);
   const dispatch=useDispatch()
 
   //firebase storage
@@ -111,6 +113,23 @@ function Profile() {
       dispatch(signOutUserFailure(error.message));
     }
   }
+
+  const handleShowListings=async ()=>{
+    try{
+      setShowListingsError(false);
+      const res=await fetch(`/api/user/listings/${currentUser._id}`);
+      const data=await res.json();
+      if(data.success===false){
+        setShowListingsError(true);
+        return
+      }
+      setShowListingToUser(data);
+
+    }
+    catch(error){
+       setShowListingsError(true);
+    }
+  }
   console.log(filePercent)
   console.log(file)
   console.log(formData)
@@ -150,6 +169,27 @@ function Profile() {
       </div>
       <p className='text-red-700 mt-5 text-center'>{error?error:''}</p>
       <p className='text-green-700 mt-5 text-center'>{updateSuccess?'User updated successfully !':""}</p>
+      <button className='text-green-700 mt-5 w-full' onClick={handleShowListings}> show listings</button>
+      <p className='text-red-700 mt-5'>{showListingsError?'Error showing listings':''}</p>
+      {showListingToUser.length>0 && 
+      <div className="flex flex-col gap-4">
+        <h1 className='text-center mt-7 text-2xl font-semibold'>Your listings</h1>
+        {showListingToUser.map((listing)=>
+        <div className="border rounded-lg p-3 flex justify-between items-center" key={listing._id}>
+          <Link to={`/listing/${listing._id}`}>
+            <img className="w-20 h-20" src={listing.imageUrls[0]}/>
+          </Link>
+          <Link to={`/listing/${listing._id}`}>
+            <p className='text-slate-700 font-semibold flex-1 hover:underline truncate'>{listing.name}</p>
+          </Link>
+          <div className='flex flex-col items-center'>
+            <button className='text-red-700 uppercase'>delete</button>
+            <button className='text-green-700 uppercase'>edit</button>
+          </div>
+       </div>
+       )}
+      </div>
+      }
       </div>
   )
 }

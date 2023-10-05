@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import {useRef} from 'react'
-import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
+import {getDownloadURL, getStorage, list, ref, uploadBytesResumable} from 'firebase/storage'
 import { app } from '../firebase'
 import { updateUserSuccess,updateUserFailure, updateUserStart, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserStart, signOutUserFailure, signOutUserSuccess } from '../redux/user/userSlice'
 import { useDispatch } from 'react-redux'
@@ -134,6 +134,22 @@ function Profile() {
   console.log(file)
   console.log(formData)
 
+  const handleListingDelete=async (listing_id)=>{
+    try {
+        const res=await fetch(`/api/listing/delete/${listing_id}`,{
+          method:'DELETE',
+        })
+        const data=await res.json();
+        if(data.success==false){
+          console.log(data.message);
+          return;
+        }
+        setShowListingToUser((prev)=>prev.filter((listing)=>listing_id!=listing._id));
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -183,7 +199,7 @@ function Profile() {
             <p className='text-slate-700 font-semibold flex-1 hover:underline truncate'>{listing.name}</p>
           </Link>
           <div className='flex flex-col items-center'>
-            <button className='text-red-700 uppercase'>delete</button>
+            <button className='text-red-700 uppercase' onClick={()=>handleListingDelete(listing._id)}>delete</button>
             <button className='text-green-700 uppercase'>edit</button>
           </div>
        </div>

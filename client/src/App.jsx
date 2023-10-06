@@ -10,6 +10,7 @@ import Sign_Up from './pages/Sign_Up'
 import PrivateRoute from './components/privateRoute'
 import Create_Listing from './pages/create_listing'
 import UpdateListing from './pages/UpdateListing'
+import Listing from './pages/Listing'
 function App() {
   return (
     <BrowserRouter>
@@ -20,6 +21,7 @@ function App() {
         <Route path='/sign-up' element={<Sign_Up />} />
         <Route path='/sign-out' element={<Sign_Out />} />
         <Route path='/about' element={<About />} />
+        <Route path='/listing/:listingId' element={<Listing />} />
         <Route element={<PrivateRoute/>}>
           <Route path="/create-listing" element={<Create_Listing/>}/>
           <Route path="/profile" element={<Profile />} />

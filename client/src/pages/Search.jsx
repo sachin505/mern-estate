@@ -199,7 +199,7 @@ function Search() {
                 {loading && (
                     <p className='text-xl text-slate-700 text-center w-full'>Loading...</p>
                 )}
-                {!loading && listings && listings.map(listing=><ListingItem key={listing._id} listing={listing}/>)}
+                {!loading &&  Array.isArray(listings) && listings.map(listing=><ListingItem key={listing._id} listing={listing}/>)}
                 {showMore && (
                 <button className='text-green-700 hover:underline p-7' 
                 onClick={()=>{
